@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,7 +13,14 @@ class _HomeScreenState extends State<HomeScreen> {
   var result;
 
   predictGender(String name) async {
+      var url = "https://api.genderize.io/?name=$name";
+      var response = await http.get(url);
+      var body = jsonDecode(response.body);
 
+      result =  "$name has gender ${body['gender']} with a probability of ${body['probability']}";
+      setState(() {
+
+      });
   }
   @override
   Widget build(BuildContext context) {
@@ -35,11 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             RaisedButton(
-              onPressed: _nameController.text.length>0 ?(){} : null,
+              onPressed:() => predictGender(_nameController.text),
               child: Text('Predict'),
             ),
             result !=null ?
-            Text('Result') : null,
+            Text(result) : Text(''),
           ],
         ),
       ),
